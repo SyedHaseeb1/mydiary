@@ -54,13 +54,14 @@ form.addEventListener('submit', (e) => {
 	<h2>${title}</h2>
 	<p>${date}</p>
 	<div style="white-space: pre-wrap;">${content}</div>
-	<button class="delete" data-index="${entries.length}">X</button>
+	<button class="delete-button" data-index="${entries.length}">X</button>
   `;
   entriesDiv.prepend(entryDiv);
 
   saveEntryToLocalStorage(title, date, content);
-
   form.reset();
+  location.reload();
+
 });
 
 entriesDiv.addEventListener('click', (e) => {
