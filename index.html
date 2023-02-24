@@ -30,7 +30,11 @@
         <label for="content">Content</label>
         <textarea id="content" name="content" rows="5" required></textarea>
       </div>
-      <button type="submit">Save</button>
+      <div class="button-row">
+        <button type="submit">Save</button>
+        <button type="button" class="clearBtn" onclick="clearEntries()">Clear All</button>
+      </div>
+
     </form>
     <div id="entries"></div>
   </main>
