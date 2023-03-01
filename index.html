@@ -13,6 +13,7 @@
     <h1>My Diary</h1>
   </header>
   <main>
+    
     <form>
       <div class="form-group">
         <label for="title">Title</label>
@@ -38,7 +39,16 @@
     </form>
     <div id="entries"></div>
   </main>
-  <script src="script.js"></script>
+
+  <div id="loading-screen">
+    <div class="spinner"></div>
+  </div>
+  
+  <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+  <script src="script_firbase.js"></script>
 </body>
 
 </html>
