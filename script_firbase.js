@@ -68,15 +68,15 @@ function saveEntryToFirebase(title, date, content) {
   function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
 	const pathSegments = window.location.pathname.split('/').filter(Boolean);
-	const path = pathSegments.length > 1 ? pathSegments.slice(1).join('/') : null;
+	const keyPath = pathSegments.length > 1 ? pathSegments.slice(1).join('/') : null;
   
-	if (!path) {
+	if (!keyPath) {
 		document.getElementById("loading-screen").style.display = "none";
 	  entriesDiv.innerHTML = 'You must provide a key path in the URL';
 	  return;
 	}
   
-	const entriesRef = firebase.database().ref('entries/' + path);
+	const entriesRef = firebase.database().ref('entries/' + keyPath);
   
 	entriesRef.on('value', (snapshot) => {
 	  entriesDiv.innerHTML = '';
@@ -94,7 +94,7 @@ function saveEntryToFirebase(title, date, content) {
 			<button class="delete-button">&times;</button>
 		  </div>
 		  <p>${entry.date}</p>
-		  <div class="entry-content">${entry.content}</div>
+		  <div style="white-space: pre-wrap;">${entry.content}</div>
 		`;
   
 		const deleteButton = entryDiv.querySelector('.delete-button');
@@ -102,19 +102,15 @@ function saveEntryToFirebase(title, date, content) {
 		  const confirmed = confirm('Are you sure you want to delete this entry?');
 		  if (confirmed) {
 			const entryId = entryDiv.dataset.id;
-			firebase.database().ref('entries/' + path + '/' + entryId).remove();
+			firebase.database().ref('entries/' + keyPath + '/' + entryId).remove();
 		  }
 		});
   
 		const copyButton = entryDiv.querySelector('.copy-button');
-		const entryContent = entryDiv.querySelector('.entry-content');
 		copyButton.addEventListener('click', () => {
-		  const range = document.createRange();
-		  range.selectNode(entryContent);
-		  window.getSelection().removeAllRanges();
-		  window.getSelection().addRange(range);
-		  document.execCommand('copy');
-		  window.getSelection().removeAllRanges();
+		  const content = entryDiv.querySelector('div').textContent;
+		  navigator.clipboard.writeText(content);
+		  alert('Copied to clipboard!');
 		});
   
 		entriesDiv.prepend(entryDiv);
@@ -123,6 +119,7 @@ function saveEntryToFirebase(title, date, content) {
 	  document.getElementById("loading-screen").style.display = "none";
 	});
   }
+  
   
   
   
