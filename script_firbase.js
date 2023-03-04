@@ -45,13 +45,11 @@ function saveEntryToLocalStorage(title, date, content) {
 //   });
 // }
 function saveEntryToFirebase(title, date, content) {
-	var path = window.location.pathname.split('/').filter(Boolean).pop();
-	if (!path) {
-	  console.error('No path provided in URL');
-	  return;
-	}
-	
-	var newEntryRef = firebase.database().ref('entries/' + path).push();
+	// get the parent node from the URL hash
+	const parentNode = window.location.hash.substring(1);
+  
+	// create a new child with a unique key under the parent node
+	var newEntryRef = firebase.database().ref('entries/' + parentNode).push();
 	newEntryRef.set({
 	  title: title,
 	  date: date,
@@ -62,6 +60,9 @@ function saveEntryToFirebase(title, date, content) {
 	  } else {
 		console.log('Document written with ID: ', newEntryRef.key);
 	  }
+  
+	  // hide the loading screen
+	  document.getElementById("loading-screen").style.display = "none";
 	});
   }
   
