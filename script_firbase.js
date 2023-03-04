@@ -128,23 +128,22 @@ function loadEntriesFromFirebase() {
   }
   
   function saveEntryToFirebase() {
-	const titleInput = document.getElementById('title-input');
-	const dateInput = document.getElementById('date-input');
-	const contentInput = document.getElementById('content-input');
-	const path = window.location.pathname.split('/').filter(Boolean).pop();
-	const entriesRef = firebase.database().ref(path);
-  
-	const entry = {
-	  title: titleInput.value,
-	  date: dateInput.value,
-	  content: contentInput.value
-	};
-  
-	entriesRef.push(entry);
-  
-	titleInput.value = '';
-	dateInput.value = '';
-	contentInput.value = '';
+	const title = document.getElementById('title').value;
+	const content = document.getElementById('content').value;
+	
+	// Get the key path from the URL
+	const keyPath = window.location.pathname.split('/').pop();
+	
+	// Check if the key path is not empty
+	if (keyPath !== '') {
+	  firebase.database().ref(keyPath).set({
+		title: title,
+		content: content,
+		date: new Date().toLocaleString()
+	  });
+	} else {
+	  alert('Please provide a key path in the URL.');
+	}
   }
   
 
