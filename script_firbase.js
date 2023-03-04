@@ -65,20 +65,28 @@ function saveEntryToFirebase(title, date, content) {
 	  document.getElementById("loading-screen").style.display = "none";
 	});
   }
-  
-function loadEntriesFromFirebase() {
+  function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
-	const entriesRef = firebase.database().ref('entries');
-  
+	
+	// get the parent node from the URL hash
+	const parentNode = window.location.hash.substring(1);
+	
+	if (!parentNode) {
+	  entriesDiv.innerHTML = 'You must provide a key path in the URL';
+	  return;
+	}
+	
+	const entriesRef = firebase.database().ref('entries/' + parentNode);
+	
 	entriesRef.on('value', (snapshot) => {
 	  entriesDiv.innerHTML = '';
-  
+	
 	  snapshot.forEach((childSnapshot) => {
 		const entry = childSnapshot.val();
 		const entryDiv = document.createElement('div');
 		entryDiv.classList.add('entry');
 		entryDiv.dataset.id = childSnapshot.key;
-  
+	
 		entryDiv.innerHTML = `
 		  <div class="entry-header">
 			<h2>${entry.title}</h2>
@@ -87,22 +95,61 @@ function loadEntriesFromFirebase() {
 		  <p>${entry.date}</p>
 		  <div style="white-space: pre-wrap;">${entry.content}</div>
 		`;
-  
+	
 		const deleteButton = entryDiv.querySelector('.delete-button');
 		deleteButton.addEventListener('click', () => {
 		  const confirmed = confirm('Are you sure you want to delete this entry?');
 		  if (confirmed) {
 			const entryId = entryDiv.dataset.id;
-			firebase.database().ref('entries/' + entryId).remove();
+			firebase.database().ref('entries/' + parentNode + '/' + entryId).remove();
 		  }
 		});
-  
+	
 		entriesDiv.prepend(entryDiv);
 	  });
+	
 	  document.getElementById("loading-screen").style.display = "none";
-
 	});
   }
+  
+  
+// function loadEntriesFromFirebase() {
+// 	const entriesDiv = document.getElementById('entries');
+// 	const entriesRef = firebase.database().ref('entries');
+  
+// 	entriesRef.on('value', (snapshot) => {
+// 	  entriesDiv.innerHTML = '';
+  
+// 	  snapshot.forEach((childSnapshot) => {
+// 		const entry = childSnapshot.val();
+// 		const entryDiv = document.createElement('div');
+// 		entryDiv.classList.add('entry');
+// 		entryDiv.dataset.id = childSnapshot.key;
+  
+// 		entryDiv.innerHTML = `
+// 		  <div class="entry-header">
+// 			<h2>${entry.title}</h2>
+// 			<button class="delete-button">&times;</button>
+// 		  </div>
+// 		  <p>${entry.date}</p>
+// 		  <div style="white-space: pre-wrap;">${entry.content}</div>
+// 		`;
+  
+// 		const deleteButton = entryDiv.querySelector('.delete-button');
+// 		deleteButton.addEventListener('click', () => {
+// 		  const confirmed = confirm('Are you sure you want to delete this entry?');
+// 		  if (confirmed) {
+// 			const entryId = entryDiv.dataset.id;
+// 			firebase.database().ref('entries/' + entryId).remove();
+// 		  }
+// 		});
+  
+// 		entriesDiv.prepend(entryDiv);
+// 	  });
+// 	  document.getElementById("loading-screen").style.display = "none";
+
+// 	});
+//   }
   
 
   form.addEventListener('submit', (e) => {
