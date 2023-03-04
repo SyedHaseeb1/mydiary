@@ -27,24 +27,44 @@ function saveEntryToLocalStorage(title, date, content) {
   localStorage.setItem('diaryEntries', JSON.stringify(entries));
 }
 
+// function saveEntryToFirebase(title, date, content) {
+//   console.log(title + " - " + content);
+//   var newEntryRef = firebase.database().ref('entries').push();
+//   newEntryRef.set({
+//     title: title,
+//     date: date,
+//     content: content
+//   }, function(error) {
+//     if (error) {
+//       console.error('Error adding document: ', error);
+//     } else {
+//       console.log('Document written with ID: ', newEntryRef.key);
+//     }
+// 	// hide the loading screen
+// document.getElementById("loading-screen").style.display = "none";
+//   });
+// }
 function saveEntryToFirebase(title, date, content) {
-  console.log(title + " - " + content);
-  var newEntryRef = firebase.database().ref('entries').push();
-  newEntryRef.set({
-    title: title,
-    date: date,
-    content: content
-  }, function(error) {
-    if (error) {
-      console.error('Error adding document: ', error);
-    } else {
-      console.log('Document written with ID: ', newEntryRef.key);
-    }
-	// hide the loading screen
-document.getElementById("loading-screen").style.display = "none";
-  });
-}
-
+	var path = window.location.pathname.split('/').filter(Boolean).pop();
+	if (!path) {
+	  console.error('No path provided in URL');
+	  return;
+	}
+	
+	var newEntryRef = firebase.database().ref('entries/' + path).push();
+	newEntryRef.set({
+	  title: title,
+	  date: date,
+	  content: content
+	}, function(error) {
+	  if (error) {
+		console.error('Error adding document: ', error);
+	  } else {
+		console.log('Document written with ID: ', newEntryRef.key);
+	  }
+	});
+  }
+  
 function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
 	const entriesRef = firebase.database().ref('entries');
