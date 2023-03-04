@@ -27,68 +27,27 @@ function saveEntryToLocalStorage(title, date, content) {
   localStorage.setItem('diaryEntries', JSON.stringify(entries));
 }
 
-// function saveEntryToFirebase(title, date, content) {
-//   console.log(title + " - " + content);
-//   var newEntryRef = firebase.database().ref('entries').push();
-//   newEntryRef.set({
-//     title: title,
-//     date: date,
-//     content: content
-//   }, function(error) {
-//     if (error) {
-//       console.error('Error adding document: ', error);
-//     } else {
-//       console.log('Document written with ID: ', newEntryRef.key);
-//     }
-// 	// hide the loading screen
-// document.getElementById("loading-screen").style.display = "none";
-//   });
-// }
+function saveEntryToFirebase(title, date, content) {
+  console.log(title + " - " + content);
+  var newEntryRef = firebase.database().ref('entries').push();
+  newEntryRef.set({
+    title: title,
+    date: date,
+    content: content
+  }, function(error) {
+    if (error) {
+      console.error('Error adding document: ', error);
+    } else {
+      console.log('Document written with ID: ', newEntryRef.key);
+    }
+	// hide the loading screen
+document.getElementById("loading-screen").style.display = "none";
+  });
+}
 
-// function loadEntriesFromFirebase() {
-// 	const entriesDiv = document.getElementById('entries');
-// 	const entriesRef = firebase.database().ref('entries');
-  
-// 	entriesRef.on('value', (snapshot) => {
-// 	  entriesDiv.innerHTML = '';
-  
-// 	  snapshot.forEach((childSnapshot) => {
-// 		const entry = childSnapshot.val();
-// 		const entryDiv = document.createElement('div');
-// 		entryDiv.classList.add('entry');
-// 		entryDiv.dataset.id = childSnapshot.key;
-  
-// 		entryDiv.innerHTML = `
-// 		  <div class="entry-header">
-// 			<h2>${entry.title}</h2>
-// 			<button class="delete-button">&times;</button>
-// 		  </div>
-// 		  <p>${entry.date}</p>
-// 		  <div style="white-space: pre-wrap;">${entry.content}</div>
-// 		`;
-  
-// 		const deleteButton = entryDiv.querySelector('.delete-button');
-// 		deleteButton.addEventListener('click', () => {
-// 		  const confirmed = confirm('Are you sure you want to delete this entry?');
-// 		  if (confirmed) {
-// 			const entryId = entryDiv.dataset.id;
-// 			firebase.database().ref('entries/' + entryId).remove();
-// 		  }
-// 		});
-  
-// 		entriesDiv.prepend(entryDiv);
-// 	  });
-// 	  document.getElementById("loading-screen").style.display = "none";
-
-// 	});
-//   }
-
-  
 function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
-	const path = window.location.pathname.split('/').filter(Boolean).pop() || 'default';
-  
-	const entriesRef = firebase.database().ref(path);
+	const entriesRef = firebase.database().ref('entries');
   
 	entriesRef.on('value', (snapshot) => {
 	  entriesDiv.innerHTML = '';
@@ -113,47 +72,18 @@ function loadEntriesFromFirebase() {
 		  const confirmed = confirm('Are you sure you want to delete this entry?');
 		  if (confirmed) {
 			const entryId = entryDiv.dataset.id;
-			firebase.database().ref(path + '/' + entryId).remove();
+			firebase.database().ref('entries/' + entryId).remove();
 		  }
 		});
   
 		entriesDiv.prepend(entryDiv);
 	  });
-  
 	  document.getElementById("loading-screen").style.display = "none";
-	});
-  }
-  
-  function saveEntry() {
-	const path = window.location.pathname.split('/').filter(Boolean).pop() || 'default';
-	const entriesRef = firebase.database().ref(path);
-  
-	const entryTitle = document.getElementById('entry-title').value;
-	const entryDate = document.getElementById('entry-date').value;
-	const entryContent = document.getElementById('entry-content').value;
-  
-	if (!entryTitle || !entryContent) {
-	  alert('Please enter a title and content for your diary entry');
-	  return;
-	}
-  
-	const newEntryRef = entriesRef.push();
-	newEntryRef.set({
-	  title: entryTitle,
-	  date: entryDate || '',
-	  content: entryContent
-	});
-  
-	alert('Your diary entry has been saved!');
-	document.getElementById('entry-form').reset();
-  }
-  
-  window.onload = () => {
-	document.getElementById('save-button').addEventListener('click', saveEntry);
-	loadEntriesFromFirebase();
-  }
 
+	});
+  }
   
+
   form.addEventListener('submit', (e) => {
 	e.preventDefault();
   
