@@ -67,7 +67,8 @@ function saveEntryToFirebase(title, date, content) {
   }
   function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
-	const path = window.location.hash.substr(1);
+	const pathSegments = window.location.pathname.split('/').filter(Boolean);
+	const path = pathSegments.length > 1 ? pathSegments.slice(1).join('/') : null;
   
 	if (!path) {
 	  entriesDiv.innerHTML = 'You must provide a key path in the URL';
