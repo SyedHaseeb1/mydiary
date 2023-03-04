@@ -46,10 +46,17 @@ function saveEntryToLocalStorage(title, date, content) {
 // }
 function saveEntryToFirebase(title, date, content) {
 	// get the parent node from the URL hash
-	const parentNode = window.location.hash.substring(1);
+	const entriesDiv = document.getElementById('entries');
+	const pathSegments = window.location.pathname.split('/').filter(Boolean);
+	const path = pathSegments.length > 1 ? pathSegments.slice(1).join('/') : null;
   
+	if (!path) {
+		document.getElementById("loading-screen").style.display = "none";
+	  entriesDiv.innerHTML = 'You must provide a key path in the URL';
+	  return;
+	}
 	// create a new child with a unique key under the parent node
-	var newEntryRef = firebase.database().ref('entries/' + parentNode).push();
+	var newEntryRef = firebase.database().ref('entries/' + path).push();
 	newEntryRef.set({
 	  title: title,
 	  date: date,
