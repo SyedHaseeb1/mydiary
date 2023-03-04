@@ -82,15 +82,12 @@ function saveEntryToLocalStorage(title, date, content) {
 
 // 	});
 //   }
+
+  
 function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
-	const path = window.location.pathname.split('/').filter(Boolean).pop();
-	
-	if (!path) {
-	  entriesDiv.innerHTML = 'You must provide a key path in the URL';
-	  return;
-	}
-	
+	const path = window.location.pathname.split('/').filter(Boolean).pop() || 'default';
+  
 	const entriesRef = firebase.database().ref(path);
   
 	entriesRef.on('value', (snapshot) => {
@@ -127,26 +124,36 @@ function loadEntriesFromFirebase() {
 	});
   }
   
-  function saveEntryToFirebase() {
-	const title = document.getElementById('title').value;
-	const content = document.getElementById('content').value;
-	
-	// Get the key path from the URL
-	const keyPath = window.location.pathname.split('/').pop();
-	
-	// Check if the key path is not empty
-	if (keyPath !== '') {
-	  firebase.database().ref(keyPath).set({
-		title: title,
-		content: content,
-		date: new Date().toLocaleString()
-	  });
-	} else {
-	  alert('Please provide a key path in the URL.');
+  function saveEntry() {
+	const path = window.location.pathname.split('/').filter(Boolean).pop() || 'default';
+	const entriesRef = firebase.database().ref(path);
+  
+	const entryTitle = document.getElementById('entry-title').value;
+	const entryDate = document.getElementById('entry-date').value;
+	const entryContent = document.getElementById('entry-content').value;
+  
+	if (!entryTitle || !entryContent) {
+	  alert('Please enter a title and content for your diary entry');
+	  return;
 	}
+  
+	const newEntryRef = entriesRef.push();
+	newEntryRef.set({
+	  title: entryTitle,
+	  date: entryDate || '',
+	  content: entryContent
+	});
+  
+	alert('Your diary entry has been saved!');
+	document.getElementById('entry-form').reset();
   }
   
+  window.onload = () => {
+	document.getElementById('save-button').addEventListener('click', saveEntry);
+	loadEntriesFromFirebase();
+  }
 
+  
   form.addEventListener('submit', (e) => {
 	e.preventDefault();
   
