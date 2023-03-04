@@ -67,26 +67,25 @@ function saveEntryToFirebase(title, date, content) {
   }
   function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
-	const pathSegments = window.location.pathname.split('/').filter(Boolean);
-	const keyPath = pathSegments.length > 1 ? pathSegments.slice(1).join('/') : null;
-  
-	if (!keyPath) {
+	const path = window.location.hash.substring(1); // extract hash fragment from URL
+	
+	if (!path) {
 		document.getElementById("loading-screen").style.display = "none";
 	  entriesDiv.innerHTML = 'You must provide a key path in the URL';
 	  return;
 	}
-  
-	const entriesRef = firebase.database().ref('entries/' + keyPath);
-  
+	
+	const entriesRef = firebase.database().ref('entries/' + path);
+	
 	entriesRef.on('value', (snapshot) => {
 	  entriesDiv.innerHTML = '';
-  
+	
 	  snapshot.forEach((childSnapshot) => {
 		const entry = childSnapshot.val();
 		const entryDiv = document.createElement('div');
 		entryDiv.classList.add('entry');
 		entryDiv.dataset.id = childSnapshot.key;
-  
+	
 		entryDiv.innerHTML = `
 		  <div class="entry-header">
 			<h2>${entry.title}</h2>
@@ -94,28 +93,32 @@ function saveEntryToFirebase(title, date, content) {
 			<button class="delete-button">&times;</button>
 		  </div>
 		  <p>${entry.date}</p>
-		  <div style="white-space: pre-wrap;">${entry.content}</div>
+		  <div class="entry-content">${entry.content}</div>
 		`;
-  
+	
 		const deleteButton = entryDiv.querySelector('.delete-button');
 		deleteButton.addEventListener('click', () => {
 		  const confirmed = confirm('Are you sure you want to delete this entry?');
 		  if (confirmed) {
 			const entryId = entryDiv.dataset.id;
-			firebase.database().ref('entries/' + keyPath + '/' + entryId).remove();
+			firebase.database().ref('entries/' + path + '/' + entryId).remove();
 		  }
 		});
-  
+	
 		const copyButton = entryDiv.querySelector('.copy-button');
+		const entryContent = entryDiv.querySelector('.entry-content');
 		copyButton.addEventListener('click', () => {
-		  const content = entryDiv.querySelector('div').textContent;
-		  navigator.clipboard.writeText(content);
-		  alert('Copied to clipboard!');
+		  const range = document.createRange();
+		  range.selectNode(entryContent);
+		  window.getSelection().removeAllRanges();
+		  window.getSelection().addRange(range);
+		  document.execCommand('copy');
+		  window.getSelection().removeAllRanges();
 		});
-  
+	
 		entriesDiv.prepend(entryDiv);
 	  });
-  
+	
 	  document.getElementById("loading-screen").style.display = "none";
 	});
   }
