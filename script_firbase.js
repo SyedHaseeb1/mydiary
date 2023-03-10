@@ -15,11 +15,13 @@ const firebaseConfig = {
 	  window.onhashchange = function() {
 		// get the hash from the URL
 		const hash = window.location.hash.substring(1);
-	
-		// do something with the hash value, e.g. save it to a database or perform a search
-		console.log('Hash changed:', hash);
-		window.location.href = `https://syedhaseeb1.github.io/mydiary/#${hash}`;
 
+		if(hash){
+			console.log('Hash changed:', hash);
+		window.location.href = `https://syedhaseeb1.github.io/mydiary/#${hash}`;
+		//location.reload();
+		}
+		
 	  };
 
 	const form = document.querySelector('form');
