@@ -185,8 +185,9 @@ function saveEntryToFirebase(title, date, content) {
 	saveEntryToLocalStorage(title, date, content);
 	document.getElementById("loading-screen").style.display = "flex";
 	saveEntryToFirebase(title,date,content);
-	form.reset();
-  location.reload();
+	resetForm();
+
+ // location.reload();
   });
 
   function clearEntries() {
@@ -201,5 +202,12 @@ function saveEntryToFirebase(title, date, content) {
 const today = new Date().toISOString().split('T')[0];
 // Set the date input's value to today's date
 document.getElementById('date').value = today;
+
+function resetForm() {
+	const today = new Date().toISOString().split('T')[0];
+	document.getElementById('date').value = today;
+	form.reset();
+  }
+  
 
   
