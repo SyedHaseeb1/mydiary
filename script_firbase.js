@@ -186,7 +186,7 @@ function saveEntryToFirebase(title, date, content) {
 	document.getElementById("loading-screen").style.display = "flex";
 	saveEntryToFirebase(title,date,content);
 	form.reset();
- // location.reload();
+  location.reload();
   });
 
   function clearEntries() {
