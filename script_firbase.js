@@ -18,6 +18,8 @@ const firebaseConfig = {
 	
 		// do something with the hash value, e.g. save it to a database or perform a search
 		console.log('Hash changed:', hash);
+		window.location.href = `https://syedhaseeb1.github.io/mydiary/#${hash}`;
+
 	  };
 
 	const form = document.querySelector('form');
