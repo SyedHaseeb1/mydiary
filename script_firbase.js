@@ -11,8 +11,14 @@ const firebaseConfig = {
     // Initialize Firebase  
 	firebase.initializeApp(firebaseConfig);
 
-	// Get a reference to the Firebase Realtime Database instance
-
+	  // handle changes in the URL after the "#" symbol
+	  window.onhashchange = function() {
+		// get the hash from the URL
+		const hash = window.location.hash.substring(1);
+	
+		// do something with the hash value, e.g. save it to a database or perform a search
+		console.log('Hash changed:', hash);
+	  };
 
 	const form = document.querySelector('form');
 const entriesDiv = document.querySelector('#entries');
