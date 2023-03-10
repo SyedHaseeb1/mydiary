@@ -27,23 +27,6 @@ function saveEntryToLocalStorage(title, date, content) {
   localStorage.setItem('diaryEntries', JSON.stringify(entries));
 }
 
-// function saveEntryToFirebase(title, date, content) {
-//   console.log(title + " - " + content);
-//   var newEntryRef = firebase.database().ref('entries').push();
-//   newEntryRef.set({
-//     title: title,
-//     date: date,
-//     content: content
-//   }, function(error) {
-//     if (error) {
-//       console.error('Error adding document: ', error);
-//     } else {
-//       console.log('Document written with ID: ', newEntryRef.key);
-//     }
-// 	// hide the loading screen
-// document.getElementById("loading-screen").style.display = "none";
-//   });
-// }
 function saveEntryToFirebase(title, date, content) {
 	// get the parent node from the URL hash
 	const parentNode = window.location.hash.substring(1);
@@ -65,12 +48,67 @@ function saveEntryToFirebase(title, date, content) {
 	  document.getElementById("loading-screen").style.display = "none";
 	});
   }
+
+
+  function showAlert(){
+	// create the dialogue element
+	const dialogue = document.createElement('div');
+	dialogue.style.position = 'fixed';
+	dialogue.style.top = '0';
+	dialogue.style.left = '0';
+	dialogue.style.width = '100%';
+	dialogue.style.height = '100%';
+	dialogue.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+	dialogue.style.display = 'flex';
+	dialogue.style.alignItems = 'center';
+	dialogue.style.justifyContent = 'center';
+  
+	// create the instruction element
+	const instruction = document.createElement('p');
+	instruction.innerText = 'Use something like https://syedhaseeb1.github.io/mydiary/#anything to proceed and start saving your notes';
+	instruction.style.color = '#fff';
+	instruction.style.fontSize = '24px';
+	instruction.style.textAlign = 'center';
+	instruction.style.marginTop = '20px';
+	instruction.style.marginInline = '40px';
+	instruction.style.lineHeight = '1.5';
+		dialogue.appendChild(instruction);
+  
+
+  
+	// add the button to the dialogue
+	//dialogue.appendChild(button);
+  
+	// add the dialogue to the page
+	document.body.appendChild(dialogue);
+  
+	// add media query for smaller screens
+	const mq = window.matchMedia('(max-width: 600px)');
+	mq.addEventListener('change', () => {
+	  if (mq.matches) {
+		dialogue.style.fontSize = '16px';
+		instruction.style.fontSize = '18px';
+		button.style.fontSize = '16px';
+		button.style.padding = '8px 16px';
+	  } else {
+		dialogue.style.fontSize = '24px';
+		instruction.style.fontSize = '24px';
+		button.style.fontSize = 'inherit';
+		button.style.padding = '10px 20px';
+	  }
+	});
+  }
+  
+  
+
+
   function loadEntriesFromFirebase() {
 	const entriesDiv = document.getElementById('entries');
 	const path = window.location.hash.substring(1); // extract hash fragment from URL
 	
 	if (!path) {
 		document.getElementById("loading-screen").style.display = "none";
+		showAlert();
 	  entriesDiv.innerHTML = 'You must provide a key path in the URL';
 	  return;
 	}
