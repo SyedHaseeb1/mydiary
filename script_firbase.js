@@ -19,7 +19,7 @@ const firebaseConfig = {
 		if(hash){
 			console.log('Hash changed:', hash);
 		window.location.href = `https://syedhaseeb1.github.io/mydiary/#${hash}`;
-		//location.reload();
+		location.reload();
 		}
 		
 	  };
@@ -171,46 +171,7 @@ function saveEntryToFirebase(title, date, content) {
 	});
   }
   
-  
-  
-  
-// function loadEntriesFromFirebase() {
-// 	const entriesDiv = document.getElementById('entries');
-// 	const entriesRef = firebase.database().ref('entries');
-  
-// 	entriesRef.on('value', (snapshot) => {
-// 	  entriesDiv.innerHTML = '';
-  
-// 	  snapshot.forEach((childSnapshot) => {
-// 		const entry = childSnapshot.val();
-// 		const entryDiv = document.createElement('div');
-// 		entryDiv.classList.add('entry');
-// 		entryDiv.dataset.id = childSnapshot.key;
-  
-// 		entryDiv.innerHTML = `
-// 		  <div class="entry-header">
-// 			<h2>${entry.title}</h2>
-// 			<button class="delete-button">&times;</button>
-// 		  </div>
-// 		  <p>${entry.date}</p>
-// 		  <div style="white-space: pre-wrap;">${entry.content}</div>
-// 		`;
-  
-// 		const deleteButton = entryDiv.querySelector('.delete-button');
-// 		deleteButton.addEventListener('click', () => {
-// 		  const confirmed = confirm('Are you sure you want to delete this entry?');
-// 		  if (confirmed) {
-// 			const entryId = entryDiv.dataset.id;
-// 			firebase.database().ref('entries/' + entryId).remove();
-// 		  }
-// 		});
-  
-// 		entriesDiv.prepend(entryDiv);
-// 	  });
-// 	  document.getElementById("loading-screen").style.display = "none";
 
-// 	});
-//   }
   
 
   form.addEventListener('submit', (e) => {
@@ -252,9 +213,9 @@ const today = new Date().toISOString().split('T')[0];
 document.getElementById('date').value = today;
 
 function resetForm() {
+	form.reset();
 	const today = new Date().toISOString().split('T')[0];
 	document.getElementById('date').value = today;
-	form.reset();
   }
   
 
