@@ -137,7 +137,7 @@ function saveEntryToFirebase(title, date, content) {
 		entryDiv.innerHTML = `
 		  <div class="entry-header">
 			<h2>${entry.title}</h2>
-			<button class="button">Copy</button>
+			<button class="copy-button">Copy</button>
 			<button class="delete-button">&times;</button>
 		  </div>
 		  <p>${entry.date}</p>
