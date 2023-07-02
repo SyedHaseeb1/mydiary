@@ -137,7 +137,7 @@ function saveEntryToFirebase(title, date, content) {
 		entryDiv.innerHTML = `
 		  <div class="entry-header">
 			<h2>${entry.title}</h2>
-			<button class="copy-button">Copy</button>
+			<button class="copy-button">&times;</button>
 			<button class="delete-button">&times;</button>
 		  </div>
 		  <p>${entry.date}</p>
@@ -187,6 +187,7 @@ function saveEntryToFirebase(title, date, content) {
 	  <h2>${title}</h2>
 	  <p>${date}</p>
 	  <div style="white-space: pre-wrap;">${content}</div>
+	  <button class="copy-button" data-index="${entries.length}">Copy</button>
 	  <button class="delete-button" data-index="${entries.length}">X</button>
 	`;
 	entriesDiv.prepend(entryDiv);
